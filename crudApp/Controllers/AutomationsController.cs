@@ -16,11 +16,11 @@ namespace crudApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(AutomationParameters parameters)
         {
             try
             {
-                var result = await _automationService.RunAutomation();
+                var result = await _automationService.RunAutomation(parameters);
                 return Ok(result);
             }
             catch (Exception ex)

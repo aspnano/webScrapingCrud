@@ -1,8 +1,8 @@
 ﻿using crudApp.Persistence.Contexts;
+using crudApp.Persistence.Models;
 using crudApp.Services.AutomationService.DTOs;
 using HtmlAgilityPack;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace crudApp.Services.AutomationService
 {
@@ -16,66 +16,71 @@ namespace crudApp.Services.AutomationService
             _context = context;
         }
 
-        public async Task<int> RunAutomation()
+        public async Task<int> RunAutomation(AutomationParameters parameters)
         {
             int recordsUpdatedTotal = 0;
-
-
             HttpClient httpClient = new();
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
-            httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.5");
-            httpClient.DefaultRequestHeaders.Add("Referer", "https://www.purecycles.com/");
 
-            string url = $"https://www.purecycles.com/collections/bicycles";
+            //// if a website gives a forbidden response, adding these headers can fix the issue
+            //httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+            //httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+            //httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.5");
+            //httpClient.DefaultRequestHeaders.Add("Referer", "https://www.dolan-bikes.com/");
 
+            // build a url and retrieve an html document
+            string url = $"https://www.dolan-bikes.com/{parameters.pageUrl}/";
             string html = await httpClient.GetStringAsync(url);
             HtmlDocument htmlDocument = new();
             htmlDocument.LoadHtml(html);
 
-            // XPath to select all voyage rows
-
-            string xpath = ".//div[contains(@class, 'grid-product__content')]";
+            // XPath to select all product containers
+            string xpath = ".//section[contains(@class, 'product-bike-category')]";
             HtmlNodeCollection productNodes = htmlDocument.DocumentNode.SelectNodes(xpath);
 
-            if (productNodes == null) // check if found anything
+            // check if found anything
+            if (productNodes == null) 
             {
                 return 0;
             }
 
+            // remove existing products
+            List<Product> existingProducts = _context.Products.ToList();
+            _context.RemoveRange(existingProducts);
+
             foreach (HtmlNode productNode in productNodes)
             {
-                string titleText = productNode.SelectSingleNode(".//div[contains(@class, 'grid-product__title')]").InnerText;
+
+                // get the product title div and inner text
+                string titleText = productNode.SelectSingleNode(".//a[contains(@class, 'product-bike-title')]").InnerText;
                 Console.WriteLine(titleText);
 
-                string priceText = productNode.SelectSingleNode(".//div[contains(@class, 'grid-product__price')]").InnerText;
-                priceText = priceText.Replace("$", "").Trim();
+                // get the product price div and trim the inner text 
+                string priceText = productNode.SelectSingleNode(".//div[@class='product-bike-price']").InnerText;
+                priceText = priceText.Replace("From", "").Trim();
+                priceText = priceText.Replace("£", "").Trim();
 
-                // Convert to decimal
-                if (decimal.TryParse(priceText, NumberStyles.Currency, CultureInfo.InvariantCulture, out decimal priceResult))
+                // try to parse the price as a decimal
+                if (decimal.TryParse(priceText, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal price))
                 {
-                    Console.WriteLine($"The price is: {priceResult}");
-                } else
-                {
-                    Console.WriteLine($"Invalid Price");
+                    Console.WriteLine($"Price: {price}");
 
-                    string salePricePattern = @"(?<=from\s)\$\d+\.\d+";
-                    Match match = Regex.Match(priceText, salePricePattern);
-                    if (match.Success)
-                    {
-                        string price = match.Groups[1].Value;
-                        Console.WriteLine($"The price is: {price}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Price not found in the HTML snippet.");
-                    }
+                    // if all goes well, create a new product
+                    Product newProduct = new();
+                    newProduct.Name = titleText;
+                    newProduct.Price = price;
+
+                    _ = _context.Products.Add(newProduct);
                 }
-
+                else
+                {
+                    Console.WriteLine("invalid price");
+                }
             }
 
+            // save changes to the database
+            recordsUpdatedTotal = await _context.SaveChangesAsync();
 
-
+            // return the records change count
             return recordsUpdatedTotal;
 
         }

@@ -1,13 +1,10 @@
-﻿
-
-using crudApp.Services.AutomationService.DTOs;
+﻿using crudApp.Services.AutomationService.DTOs;
 
 namespace crudApp.Services.AutomationService
 {
     public interface IAutomationService
     {
-
-        Task<int> RunAutomation();
+        Task<int> RunAutomation(AutomationParameters parameters);
 
     }
 }

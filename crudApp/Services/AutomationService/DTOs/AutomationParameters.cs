@@ -2,6 +2,6 @@
 {
     public class AutomationParameters
     {
-        public decimal minimumPrice { get; set; }
+        public string pageUrl { get; set; }
     }
 }
