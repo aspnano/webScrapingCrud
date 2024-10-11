@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "d39f1777-0088-4057-b3a2-2262078d38e5",
+		"name": "WebScrapingCrudApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28891825"
+	},
+	"item": [
+		{
+			"name": "Get Products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7237/api/products",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7237",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"example product\",\r\n    \"price\": \"1500\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7237/api/products",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7237",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"example product\",\r\n    \"price\": \"2500\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7237/api/products",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7237",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Product",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"first\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7237/api/products/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7237",
+					"path": [
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Run Automation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7237/api/automations",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7237",
+					"path": [
+						"api",
+						"automations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cat Facts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://catfact.ninja/facts",
+					"protocol": "https",
+					"host": [
+						"catfact",
+						"ninja"
+					],
+					"path": [
+						"facts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
