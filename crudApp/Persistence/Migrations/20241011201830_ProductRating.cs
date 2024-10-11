@@ -5,13 +5,13 @@
 namespace crudApp.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class priceProducts : Migration
+    public partial class ProductRating : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<decimal>(
-                name: "Price",
+                name: "Rating",
                 table: "Products",
                 type: "decimal(18,2)",
                 nullable: false,
@@ -22,7 +22,7 @@ namespace crudApp.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Price",
+                name: "Rating",
                 table: "Products");
         }
     }

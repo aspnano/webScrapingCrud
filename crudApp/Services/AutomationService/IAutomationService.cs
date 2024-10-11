@@ -4,7 +4,7 @@ namespace crudApp.Services.AutomationService
 {
     public interface IAutomationService
     {
-        Task<int> RunAutomation(AutomationParameters parameters);
+        Task<int> RunAutomation();
 
     }
 }

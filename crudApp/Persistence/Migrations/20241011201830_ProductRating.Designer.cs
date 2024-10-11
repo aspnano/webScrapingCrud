@@ -11,8 +11,8 @@ using crudApp.Persistence.Contexts;
 namespace crudApp.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240926221308_priceProducts")]
-    partial class priceProducts
+    [Migration("20241011201830_ProductRating")]
+    partial class ProductRating
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,7 @@ namespace crudApp.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("Rating")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
