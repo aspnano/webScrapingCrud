@@ -54,7 +54,7 @@ namespace crudApp.Services.AutomationService
                 Console.WriteLine(titleText);
 
                 // get the product rating div and inner text 
-                string ratingText = productNode.SelectSingleNode(".//td[@class='collection_bggrating']").InnerText.Trim();
+                string ratingText = productNode.SelectSingleNode("(.//td[@class='collection_bggrating'])[2]").InnerText.Trim();
 
                 // try to parse the rating as a decimal
                 if (decimal.TryParse(ratingText, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal rating))
